@@ -56,9 +56,9 @@ class PipeGrid(Grid):
 
 def expand(text):
   for line in text:
-    line = ''.join(x+'#' for x in line.rstrip())
+    line = ''.join(x+',' for x in line.rstrip())
     yield line
-    yield '#' * len(line)
+    yield ',' * len(line)
 
 def main(files):
   for fname in files:
@@ -73,8 +73,7 @@ def main(files):
     grid.mark('green', intermediate)
 
     path_length = grid.find_path(start, first_step)
-    print(grid)
-    grid.flood_fill('blue', (0,7))
+    grid.flood_fill('yellow', (0,0))
 
     target_chars = set('7|J-LF.')
     counter = 0
