@@ -75,15 +75,17 @@ def main(files):
     path_length = grid.find_path(start, first_step)
     print(grid)
     grid.flood_fill('blue', (0,7))
-    print(grid)
 
-    target_chars = set('7|J-LF')
+    target_chars = set('7|J-LF.')
     counter = 0
     for line in grid.grid:
       for point in line:
         if point['val'] in target_chars:
           if 'color' not in point:
+            point['color'] = 'blue'
             counter += 1
+
+    print(grid)
     print(counter)
 
 if __name__ == '__main__':
