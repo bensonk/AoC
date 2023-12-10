@@ -16,7 +16,6 @@ hand_order = dict(zip([
     ], range(50)))
 card_order = dict(zip(reversed('AKQJT98765432'), range(50)))
 
-
 def hand_type(counts):
   values = tuple(sorted(counts.values()))
   if values == (5):
@@ -70,7 +69,6 @@ def compare_hands(left, right):
   else:
     return -1
 
-
 def main(files):
   for fname in files:
     with open(fname) as f:
@@ -80,8 +78,6 @@ def main(files):
       pprint(hands)
       print(winnings)
       print(f'Winnings: {sum(winnings)}')
-
-
 
 class CamelCardsTests(unittest.TestCase):
   def setUp(self):
