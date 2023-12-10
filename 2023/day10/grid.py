@@ -20,8 +20,19 @@ class Grid(object):
         if predicate(coord, point['val']):
           point['color'] = color
 
-  def flood_fill(self, start):
-    pass # TODO
+  def flood_fill(self, color, start):
+    start_d = self._get(start)
+    prev_color = start_d['color'] if 'color' in start_d else None
+    start_d['color'] = color
+
+    coords = [c for c in (self.up(start), self.down(start), self.left(start), self.right(start)) if c]
+    for point in coords:
+      target = self._get(point)
+      if 'color' in target:
+        if (target['color'] == prev_color):
+          self.flood_fill(color, point)
+      elif (color not in target) and prev_color == None:
+        self.flood_fill(color, point)
 
   def find(self, c):
     positions = []
@@ -48,11 +59,11 @@ class Grid(object):
     self._get(point)['val'] = val
 
   def up(self, point, dist=1):
-    if point[1]>0:
+    if point[1] <= (self.height - dist):
       return point[0], point[1]+dist
 
   def down(self, point, dist=1):
-    if point[1]<self.height:
+    if point[1] > 0:
       return point[0], point[1]-dist
 
   def left(self, point, dist=1):
@@ -60,7 +71,7 @@ class Grid(object):
       return point[0]-dist, point[1]
 
   def right(self, point, dist=1):
-    if point[0] < self.width:
+    if point[0] <= (self.width - dist - 1):
       return point[0]+dist, point[1]
 
   def __str__(self):
@@ -87,10 +98,10 @@ def main(args):
   for fname in args:
     with open(fname) as f:
       g = Grid(f)
-      g.mark('green', lambda _, v: v == '*')
-      g.mark('red', lambda _, v: v == '#')
-      g.mark('blue', lambda _, v: v == '%')
-      g.mark('yellow', lambda _, v: v == '/')
+      g.mark('green', lambda _, v: v == 'A')
+      print(g)
+      g.flood_fill('yellow', (0,0))
+      g.flood_fill('blue', (32, 32))
       print(g)
 
 if __name__ == '__main__':

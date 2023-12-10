@@ -20,7 +20,6 @@ class PipeGrid(Grid):
       return [self.up(point, 2), self.right(point, 2)]
     elif val == 'F':
       return [self.down(point, 2), self.right(point, 2)]
-
   def find_path(self, prev, current):
     print(prev, current)
     if self.get(current) == 'S':
@@ -35,9 +34,9 @@ class PipeGrid(Grid):
     else:
       raise Exception("Previous point wasn't found.")
     self.mark('green', current)
-    intermediate = int((current[0]+prev[0])/2), int((current[1]+prev[1])/2)
-    self.mark('green', intermediate)
+    intermediate = int((next_point[0]+current[0])/2), int((next_point[1]+current[1])/2)
     self.set(intermediate, '+')
+    self.mark('green', intermediate)
     return 1 + self.find_path(current, next_point)
 
   def begin(self, start):
@@ -57,9 +56,9 @@ class PipeGrid(Grid):
 
 def expand(text):
   for line in text:
-    line = ''.join(x+'`' for x in line.rstrip())
+    line = ''.join(x+'#' for x in line.rstrip())
     yield line
-    yield '`' * len(line)
+    yield '#' * len(line)
 
 def main(files):
   for fname in files:
@@ -68,11 +67,24 @@ def main(files):
 
     start = grid.find('S')[0]
     first_step = grid.begin(start)
+    grid.mark('green', start)
+    intermediate = int((first_step[0]+start[0])/2), int((first_step[1]+start[1])/2)
+    grid.set(intermediate, '+')
+    grid.mark('green', intermediate)
+
     path_length = grid.find_path(start, first_step)
     print(grid)
+    grid.flood_fill('blue', (0,7))
+    print(grid)
 
-    grid.flood_fill('yellow', (0,0))
-
+    target_chars = set('7|J-LF')
+    counter = 0
+    for line in grid.grid:
+      for point in line:
+        if point['val'] in target_chars:
+          if 'color' not in point:
+            counter += 1
+    print(counter)
 
 if __name__ == '__main__':
   sys.setrecursionlimit(40000)
